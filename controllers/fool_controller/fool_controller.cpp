@@ -120,7 +120,7 @@ int main(int argc, char **argv) {
 
   // Enter here exit cleanup code.
   _leftMotor->setVelocity(0);
-  _rightMotor->setVelocity(0);
+  _rightMotor->setVelocity(0)
   _left_wheel_sensor->disable();
   _right_wheel_sensor->disable();  
   for (int ind = 0; ind < 16; ind++){
