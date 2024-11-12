@@ -1,12 +1,8 @@
-// File:          full_controller.cpp
-// Date:
-// Description:
-// Author:
-// Modifications:
 
-// You may need to add webots include files such as
-// <webots/DistanceSensor.hpp>, <webots/Motor.hpp>, etc.
-// and/or to add some other includes
+#include "robot/MyRobot.hpp"
+#include "fsm/state_machine.hpp"
+#include "fsm/transitions.hpp"
+
 #include <webots/Robot.hpp>
 #include <webots/Motor.hpp>
 #include <webots/DistanceSensor.hpp>
@@ -27,7 +23,9 @@ using namespace webots;
 // "controllerArgs" field of the Robot node
 int main(int argc, char **argv) {
   // create the Robot instance.
+  /*
   Robot *robot = new Robot();
+
 
   // get the time step of the current world.
   int timeStep = (int)robot->getBasicTimeStep();
@@ -120,7 +118,7 @@ int main(int argc, char **argv) {
 
   // Enter here exit cleanup code.
   _leftMotor->setVelocity(0);
-  _rightMotor->setVelocity(0)
+  _rightMotor->setVelocity(0);
   _left_wheel_sensor->disable();
   _right_wheel_sensor->disable();  
   for (int ind = 0; ind < 16; ind++){
@@ -130,7 +128,16 @@ int main(int argc, char **argv) {
   _gps->disable();
   _front_cam->disable();
   _spher_cam->disable();
-  delete robot;
-  
+  delete robot;*/
+
+
+
+
+  auto my_robot = std::make_unique<MyRobot>(); 
+
+  Controller<MyRobot, state_variant> controller {std::move(my_robot), Localization()};
+
+  controller.run();
+
   return 0;
 }
