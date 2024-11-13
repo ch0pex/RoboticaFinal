@@ -1,5 +1,4 @@
-#ifndef ORIENTATION_HPP_
-#define ORIENTATION_HPP_
+#pragma once
 
 #include "MyRobot.hpp"
 
@@ -7,7 +6,7 @@ struct Orientation {
     void update(MyRobot& robot) { 
 
     }
+    void enter(MyRobot& robot){
+
+    }
 };
-
-
-#endif

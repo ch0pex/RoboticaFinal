@@ -44,7 +44,7 @@ struct vec3  {
     vec3 operator+(const vec3& other) const { return {other.x + x, other.y + y, other.z + z}; }
     vec3 operator-(const vec3& other) const { return {other.x - x, other.y - y, other.z - z}; }
     void operator+=(const vec3& other) const { x += other.x; y += other.y; z += other.z; }
-    void operator-=(const vec3& other) const { x -= other.x; y -= other.y; z -= other.z }
+    void operator-=(const vec3& other) const { x -= other.x; y -= other.y; z -= other.z; }
     bool operator==(const vec3& other) const { return x == other.x && y == other.y && z == other.z; }
     // bool operator<=(const auto& other) const { return x <= other && y <= other && z <= other; }
     // bool operator>=(const auto& other) const { return x >= other && y >= other && z >= other; }

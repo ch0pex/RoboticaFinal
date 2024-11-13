@@ -11,48 +11,31 @@
 //////////////////////////////////////////////
 
 MyRobot::MyRobot()
-    :   Robot(), pos_(0, -8.5), goal_pos_(0, 8), displacement_(), theta_(0.14),
-        theta_goal_(atan2((goal_pos_.x - pos_.x), (goal_pos_.y - pos_.y)))
+    :   Robot(), motors(this), pos_(0, -8.5), theta_(0.14)
 {
-    _time_step = 64; // control time step
 
     my_compass_= getCompass("compass");
-    my_compass_->enable(_time_step);
-
-    left_motor_ = getMotor("left wheel motor");
-    right_motor_ = getMotor("right wheel motor");
-
+    my_compass_->enable(time_step_);
 
     for (int ind = 0; ind < 16; ind++){
       std::string sensor_name = std::string("ds") + std::to_string(ind);
-      cout << "Initializing distance sensor: " << sensor_name << endl;
+      std::cout << "Initializing distance sensor: " << sensor_name << "\n";
       distance_sensor_[ind] = getDistanceSensor(sensor_name.c_str());
-      distance_sensor_[ind]->enable(_time_step);
+      distance_sensor_[ind]->enable(time_step_);
     }
     
     // set position to infinity, to allow velocity control
-    left_motor_->setPosition(INFINITY);
-    right_motor_->setPosition(INFINITY);
-
-    // AddStopState();
-    // AddMoveState();
-    // AddAvoidState();
-    // stateMachine_.ChangeState(State::FORWARD);
 }
 
 MyRobot::~MyRobot()
 {
     // disable devices --> distance sensor
     for (int ind = 0; ind < 2; ind++) {
-      cout << "Disabling distance sensor: " << ds_name_[ind] << endl;
+      std::cout << "Disabling distance sensor: " << ds_name_[ind] << "\n";
       distance_sensor_[ind]->disable();
     }   
 }
 
-void MyRobot::Idle() {
-    left_motor_->setVelocity(0);
-    right_motor_->setVelocity(0);
-}
 
 void MyRobot::ReadSensors() {
     front_left = utils::ir_to_distance(distance_sensor_[0]->getValue() );
@@ -71,8 +54,8 @@ bool MyRobot::IsFacingDesiredAngle() {
   compass_angle = utils::convert_bearing_to_degrees(compass_val);
 
   // print sensor values to console
-  cout << "Desired angle (degres): " << desired_angle << endl;
-  cout << "Compass angle (degrees): " << compass_angle << endl;
+  std::cout << "Desired angle (degres): " << desired_angle << "\n";
+  std::cout << "Compass angle (degrees): " << compass_angle << "\n";
 
   if (((compass_angle * desired_angle) < 0) && ((abs(compass_angle - desired_angle)) > 180))
   // Going through angle discontinuity
@@ -177,14 +160,13 @@ bool MyRobot::IsFacingDesiredAngle() {
   // stateMachine_.AddState(std::move(right));
 // }
 
-utils::Direction MyRobot::RightOrLeft() {
-    return (follower_dir = follower_dir == utils::right ? utils::left : utils::right);
-}
+// utils::Direction MyRobot::RightOrLeft() {
+    // return (follower_dir = follower_dir == utils::right ? utils::left : utils::right);
+// }
 
 void MyRobot::ComputeOdometry()
 {
   pos_.x += ((sr_ + sl_) / 2 * sin(theta_ + ((sr_ - sl_) / (2 * wheel_distance))));
   pos_.y += ((sr_ + sl_) / 2 * cos(theta_ + ((sr_ - sl_) / (2 * wheel_distance))));
   theta_ = theta_ + ((sr_ - sl_) / wheel_distance);
-  
 }        

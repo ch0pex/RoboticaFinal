@@ -1,5 +1,4 @@
-#ifndef PERSON_SEARCH_HPP_
-#define PERSON_SEARCH_HPP_
+#pragma once
 
 #include "MyRobot.hpp"
 
@@ -7,7 +6,8 @@ struct PersonSearch {
     void update(MyRobot& robot) { 
 
     }
+    void enter(MyRobot& robot){
+        
+
+    }
 };
-
-
-#endif

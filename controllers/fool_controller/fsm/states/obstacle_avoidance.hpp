@@ -1,5 +1,4 @@
-#ifndef OBSTACLE_AVOIDANCE_HPP_
-#define OBSTACLE_AVOIDANCE_HPP_
+#pragma once
 
 #include "MyRobot.hpp"
 
@@ -7,7 +6,8 @@ struct ObstacleAvoidance {
     void update(MyRobot& robot) { 
 
     }
+    void enter(MyRobot& robot){
+        
+
+    }
 };
-
-
-#endif

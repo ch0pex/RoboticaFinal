@@ -1,5 +1,4 @@
-#ifndef LOCALIZATION_HPP_
-#define LOCALIZATION_HPP_
+#pragma once
 
 #include "MyRobot.hpp"
 
@@ -7,6 +6,8 @@ struct Localization {
     void update(MyRobot& robot) { 
         
     }
-};
 
-#endif
+    void enter(MyRobot& robot){
+        robot.stop();    
+    }
+};

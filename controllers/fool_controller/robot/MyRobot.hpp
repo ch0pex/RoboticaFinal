@@ -1,9 +1,9 @@
-#ifndef MY_ROBOT_HPP_
-#define MY_ROBOT_HPP_
+#pragma once
 
 
 #include "../utils/math.hpp"
 #include "../fsm/state_machine.hpp"
+#include "components/motors.hpp"
 
 // include dependencies
 #include <iostream>
@@ -16,7 +16,6 @@
 #include <webots/Compass.hpp>
 #include <array>
 
-using namespace std;
 using namespace webots;
 
 class MyRobot : public Robot
@@ -32,88 +31,54 @@ public:
      */
     ~MyRobot();
 
+    bool time_step() { return step(65) != -1; } 
 
-    enum State {
-        STOP = 0,
-        FORWARD,
-        TURN_LEFT,
-        TURN_RIGHT,
-        OBSTACLE_AVOID
-    };
+    template<utils::Direction direction> void Move();
 
-    bool time_step() { return step(time_step_) != -1; } 
+    template<utils::Direction direction> void Rotate();
 
-private:
-    utils::Direction RightOrLeft();
+    template<utils::Direction motor> 
+    void setMotorVelocity(double speed) { 
+        if constexpr (motor == left) { 
+            left_motor_->setVelocity(speed);
+        } else { 
+            right_motor_->setVelocity(speed);
+        }
+    }
 
-    template<utils::Direction direction>
-    void WallFollower();
-
-    template<utils::Direction direction>
-    void Move();
-    void Idle();
+    void stop() { 
+        // motors.left->setVelocity(0);
+        // motors.right->setVelocity(0);
+    }
 
     void ReadSensors();
+
     bool IsFacingDesiredAngle();
+
     void ComputeOdometry();
 
-    static constexpr double max_velocity_   { 5.0 };
+private:
     static constexpr double min_distance    { 15 };
     static constexpr double desired_angle   { -90.0 };
-    static constexpr double wheel_distance  { 0.32 };
-    static constexpr double wheel_radius    { 0.0825 };
-
-    // The time step
-    int time_step_;
-
-    // velocities
-    double left_speed, right_speed;
 
     // Motors
-    Motor *left_motor_;
-    Motor *right_motor_;
+    Motors motors;
 
     Compass *my_compass_;
 
     std::array<DistanceSensor*, 16> distance_sensor_;
     std::array<const char *, 16> ds_name_;
     double front_left, front_right, left_ir, right_ir;
-    utils::Direction follower_dir { utils::Direction::left };
+    std::array<double, 4> lasers_;
     double compass_angle;
 
     //Odometry
-    utils::vec2<double> pos_, goal_pos_;
-    double theta_, theta_goal_, sl_, sr_;
+    utils::vec2<double> pos_;
+    double theta_, sl_, sr_;
 };
 
-template <>
-inline void MyRobot::Move<utils::Direction::right>()
-{
-    left_motor_->setVelocity(max_velocity_);
-    right_motor_->setVelocity(max_velocity_ / 2);
-}
 
-template <>
-inline void MyRobot::Move<utils::Direction::left>()
-{
-    left_motor_->setVelocity(max_velocity_ / 2);
-    right_motor_->setVelocity(max_velocity_);
-}
-
-template <>
-inline void MyRobot::Move<utils::Direction::front>()
-{
-    left_motor_->setVelocity(max_velocity_);
-    right_motor_->setVelocity(max_velocity_);
-}
-
-template <>
-inline void MyRobot::Move<utils::Direction::back>()
-{
-    left_motor_->setVelocity(-max_velocity_);
-    right_motor_->setVelocity(-max_velocity_);
-}
-
+/*
 template <utils::Direction direction>
 inline void MyRobot::WallFollower()
 {
@@ -121,7 +86,6 @@ inline void MyRobot::WallFollower()
         left_motor_->setPosition(INFINITY);
         right_motor_->setPosition(INFINITY);
 
-/*
         double left_speed = 0, right_speed = 0, side_sensor = 0;
         constexpr utils::Direction opposite_dir = direction == utils::left ? utils::left : utils::right;
 
@@ -153,8 +117,6 @@ inline void MyRobot::WallFollower()
 
         left_motor_->setVelocity(left_speed);
         right_motor_->setVelocity(right_speed);
-*/
-
         double left_speed = 0;
         double right_speed = 0;
 
@@ -187,5 +149,4 @@ inline void MyRobot::WallFollower()
 
 
 }
-
-#endif
+*/

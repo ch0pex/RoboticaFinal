@@ -1,5 +1,4 @@
-#ifndef PERSON_PICKUP_HPP_
-#define PERSON_PICKUP_HPP_
+#pragma once
 
 #include "MyRobot.hpp"
 
@@ -7,7 +6,8 @@ struct PersonPickUp {
     void update(MyRobot& robot) { 
 
     }
+    void enter(MyRobot& robot){
+        
+
+    }
 };
-
-
-#endif
