@@ -2,12 +2,8 @@
 
 #include "MyRobot.hpp"
 
-struct Localization { 
-    void update(MyRobot& robot) { 
-        
-    }
+struct Localization {
+  void update(MyRobot& robot) { }
 
-    void enter(MyRobot& robot){
-        robot.stop();    
-    }
+  void enter(MyRobot& robot) { }
 };
