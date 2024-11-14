@@ -1,10 +1,9 @@
 #pragma once
 
 
-#include "../fsm/state_machine.hpp"
-#include "../utils/math.hpp"
-#include "components/motors.hpp"
+#include "components/actuators.hpp"
 #include "components/navigation.hpp"
+#include "components/sensors.hpp"
 
 
 #include <array>
@@ -15,18 +14,19 @@ using namespace webots;
 
 struct MyRobot final : private Robot {
 
-  MyRobot();
+  MyRobot() : motors(*this), gps(*this), compass(*this), cameras(*this) {}
 
-  ~MyRobot() override;
+  ~MyRobot() = default;
 
   bool time_step() { return step(utils::time_step) != -1; }
 
-  void ReadSensors();
-
-
   // Motors
-  Motors motors;
-  Navigation navigation;
+  actuators::Motors motors;
+  navigation::Gps gps;
+  navigation::Compass compass;
+  navigation::Odometry odometry;
+  sensors::Cameras cameras;
+  sensors::DistanceSensors distance_sensors;
 
   std::array<DistanceSensor*, 16> distance_sensor_;
   std::array<char const*, 16> ds_name_;

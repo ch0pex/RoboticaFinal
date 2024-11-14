@@ -47,10 +47,10 @@ int main() {
   //   _rightMotor->setVelocity(5);
   //
   //   // initializing encoders
-  PositionSensor* _left_wheel_sensor  = robot->getPositionSensor("left wheel sensor");
-  PositionSensor* _right_wheel_sensor = robot->getPositionSensor("right wheel sensor");
-  _left_wheel_sensor->enable(timeStep);
-  _right_wheel_sensor->enable(timeStep);
+  // PositionSensor* _left_wheel_sensor  = robot->getPositionSensor("left wheel sensor");
+  // PositionSensor* _right_wheel_sensor = robot->getPositionSensor("right wheel sensor");
+  // _left_wheel_sensor->enable(timeStep);
+  // _right_wheel_sensor->enable(timeStep);
 
   //   // initializing distance sensors
   //   DistanceSensor*_distance_sensor[16];
@@ -64,8 +64,6 @@ int main() {
   //   _compass->enable(timeStep);
   //
   //   // initializing GPS
-  //   GPS * _gps = robot->getGPS("gps");
-  //   _gps->enable(timeStep);
   //
   //   // initializing and testing cameras
   //   Camera *_front_cam = robot->getCamera("camera_f");

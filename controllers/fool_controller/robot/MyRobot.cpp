@@ -10,10 +10,8 @@
 
 //////////////////////////////////////////////
 
-MyRobot::MyRobot() : Robot(), motors(this), pos_(0, -8.5), theta_(0.14) {
+MyRobot::MyRobot() : motors(this) {
 
-  my_compass_ = getCompass("compass");
-  my_compass_->enable(utils::time_step);
 
   for (int ind = 0; ind < 16; ind++) {
     std::string sensor_name = std::string("ds") + std::to_string(ind);
@@ -43,44 +41,6 @@ void MyRobot::ReadSensors() {
   std::cout << "Front right: " << front_left << "\n";
   std::cout << "Left: " << left_ir << "\n";
   std::cout << "Right: " << right_ir << "\n";
-}
-
-bool MyRobot::IsFacingDesiredAngle() {
-  double const* compass_val = my_compass_->getValues();
-  // convert compass bearing vector to angle, in degrees
-  compass_angle = utils::convert_bearing_to_degrees(compass_val);
-
-  // print sensor values to console
-  std::cout << "Desired angle (degrees): " << desired_angle << "\n";
-  std::cout << "Compass angle (degrees): " << compass_angle << "\n";
-
-  if (compass_angle * desired_angle < 0 && abs(compass_angle - desired_angle) > 180)
-  // Going through angle discontinuity
-  {
-    if (compass_angle < (desired_angle - 2)) {
-      // turn left
-      return false;
-    }
-    else if (compass_angle > (desired_angle + 2)) {
-      // turn right
-      return false;
-    }
-    // move straight forward
-    return true;
-  }
-
-  else {
-    if (compass_angle < (desired_angle - 2)) {
-      // turn right
-      return false;
-    }
-    else if (compass_angle > (desired_angle + 2)) {
-      // turn left
-      return false;
-    }
-    // move straight forward
-    return true;
-  }
 }
 
 // void MyRobot::AddStopState() {
@@ -160,9 +120,3 @@ bool MyRobot::IsFacingDesiredAngle() {
 // utils::Direction MyRobot::RightOrLeft() {
 // return (follower_dir = follower_dir == utils::right ? utils::left : utils::right);
 // }
-
-void MyRobot::ComputeOdometry() {
-  pos_.x += ((sr_ + sl_) / 2 * sin(theta_ + ((sr_ - sl_) / (2 * utils::wheel_distance))));
-  pos_.y += ((sr_ + sl_) / 2 * cos(theta_ + ((sr_ - sl_) / (2 * utils::wheel_distance))));
-  theta_ = theta_ + ((sr_ - sl_) / utils::wheel_distance);
-}

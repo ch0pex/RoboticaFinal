@@ -1,7 +1,7 @@
 # Generated from CLion C/C++ Code Style settings
 ---
 Language: Cpp
-Standard: Latest
+Standard: c++17
 BasedOnStyle: LLVM
 AccessModifierOffset: -2
 AlignConsecutiveAssignments: true
