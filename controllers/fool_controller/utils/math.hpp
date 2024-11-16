@@ -57,14 +57,14 @@ struct vec3 {
   T x, y, z;
 };
 
-inline double convert_bearing_to_degrees(double const* in_vector) {
+constexpr inline double convert_bearing_to_degrees(double const* in_vector) {
   double const rad = atan2(in_vector[0], in_vector[2]);
   double const deg = rad * (180.0 / pi_v);
 
   return deg;
 }
 
-inline double ir_to_distance(double const ir_value) { return (1024 - ir_value) * 0.2; }
+constexpr inline double ir_to_distance(double const ir_value) { return (1024 - ir_value) * 0.2; }
 
 } // namespace math
 

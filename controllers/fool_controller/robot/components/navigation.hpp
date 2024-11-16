@@ -17,7 +17,7 @@ public:
   // *** Constructors ***
   explicit Compass(Robot& robot) : compass_(robot.getCompass("compass")) { compass_->enable(utils::time_step); }
 
-  ~Compass()() { compass_->disable(); }
+  ~Compass() { compass_->disable(); }
 
   void setDesiredAngle(double const angle) { desired_angle_ = angle; }
 

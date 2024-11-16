@@ -6,19 +6,18 @@
 #include <webots/Motor.hpp>
 #include <webots/Robot.hpp>
 
-using namespace webots;
 
 namespace actuators {
 
 class Motors {
 public:
-  explicit Motors(Robot& robot) :
+  explicit Motors(webots::Robot& robot) :
     left(robot.getMotor("left wheel motor")), right(robot.getMotor("right wheel motor")) {
     left->setPosition(INFINITY);
     right->setPosition(INFINITY);
   }
 
-  ~Motors()() { setVelocity(0); }
+  ~Motors() { setVelocity(0); }
 
   template<utils::Direction motor>
   void setVelocity(double const speed) const {
@@ -54,8 +53,8 @@ private:
   // static constexpr auto clip_velocity = [](double const speed) { return speed > max_velocity ? max_velocity :
   // speed;};
 
-  Motor* left;
-  Motor* right;
+  webots::Motor* left;
+  webots::Motor* right;
 };
 
 } // namespace actuators

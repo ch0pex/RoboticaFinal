@@ -10,38 +10,30 @@
 
 //////////////////////////////////////////////
 
-MyRobot::MyRobot() : motors(this) {
+// MyRobot::MyRobot() : motors(this) {
 
 
-  for (int ind = 0; ind < 16; ind++) {
-    std::string sensor_name = std::string("ds") + std::to_string(ind);
-    std::cout << "Initializing distance sensor: " << sensor_name << "\n";
-    distance_sensor_[ind] = getDistanceSensor(sensor_name);
-    distance_sensor_[ind]->enable(utils::time_step);
-  }
-
-  // set position to infinity, to allow velocity control
-}
-
-MyRobot::~MyRobot() {
-  // disable devices --> distance sensor
-  for (int ind = 0; ind < 2; ind++) {
-    std::cout << "Disabling distance sensor: " << ds_name_[ind] << "\n";
-    distance_sensor_[ind]->disable();
-  }
-}
+//  for (int ind = 0; ind < 16; ind++) {
+//    std::string sensor_name = std::string("ds") + std::to_string(ind);
+//    std::cout << "Initializing distance sensor: " << sensor_name << "\n";
+//    distance_sensor_[ind] = getDistanceSensor(sensor_name);
+//    distance_sensor_[ind]->enable(utils::time_step);
+//  }
+//
+//   set position to infinity, to allow velocity control
+//}
 
 
-void MyRobot::ReadSensors() {
-  front_left  = math::ir_to_distance(distance_sensor_[0]->getValue());
-  front_right = math::ir_to_distance(distance_sensor_[15]->getValue());
-  left_ir     = math::ir_to_distance(distance_sensor_[3]->getValue());
-  right_ir    = math::ir_to_distance(distance_sensor_[5]->getValue());
-  std::cout << "Front left: " << front_left << "\n";
-  std::cout << "Front right: " << front_left << "\n";
-  std::cout << "Left: " << left_ir << "\n";
-  std::cout << "Right: " << right_ir << "\n";
-}
+// void MyRobot::ReadSensors() {
+//   front_left  = math::ir_to_distance(distance_sensor_[0]->getValue());
+//   front_right = math::ir_to_distance(distance_sensor_[15]->getValue());
+//   left_ir     = math::ir_to_distance(distance_sensor_[3]->getValue());
+//   right_ir    = math::ir_to_distance(distance_sensor_[5]->getValue());
+//   std::cout << "Front left: " << front_left << "\n";
+//   std::cout << "Front right: " << front_left << "\n";
+//   std::cout << "Left: " << left_ir << "\n";
+//   std::cout << "Right: " << right_ir << "\n";
+// }
 
 // void MyRobot::AddStopState() {
 // utils::State stop_state {

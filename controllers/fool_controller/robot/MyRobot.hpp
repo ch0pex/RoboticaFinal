@@ -12,9 +12,9 @@
 
 using namespace webots;
 
-struct MyRobot final : private Robot {
+struct MyRobot final : public Robot {
 
-  MyRobot() : motors(*this), gps(*this), compass(*this), cameras(*this) {}
+  MyRobot() : motors(*this), gps(*this), compass(*this), cameras(*this), ir_sensors(*this) { }
 
   ~MyRobot() = default;
 
@@ -26,12 +26,9 @@ struct MyRobot final : private Robot {
   navigation::Compass compass;
   navigation::Odometry odometry;
   sensors::Cameras cameras;
-  sensors::DistanceSensors distance_sensors;
+  sensors::Infrared ir_sensors;
 
-  std::array<DistanceSensor*, 16> distance_sensor_;
-  std::array<char const*, 16> ds_name_;
-  double front_left, front_right, left_ir, right_ir;
-  std::array<double, 4> lasers_;
+  //  std::array<double, 4> lasers_;
 };
 
 
