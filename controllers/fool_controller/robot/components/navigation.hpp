@@ -1,6 +1,7 @@
 #pragma once
 
 #include "utils/common.hpp"
+#include "utils/logger.hpp"
 #include "utils/math.hpp"
 
 #include <webots/Camera.hpp>
@@ -15,18 +16,29 @@ namespace navigation {
 class Compass {
 public:
   // *** Constructors ***
-  explicit Compass(Robot& robot) : compass_(robot.getCompass("compass")) { compass_->enable(utils::time_step); }
+  explicit Compass(Robot& robot) : compass_(robot.getCompass("compass")) {
+    logger(Log::robot) << "Compass initialized";
+    compass_->enable(utils::time_step);
+  }
 
   ~Compass() { compass_->disable(); }
 
-  void setDesiredAngle(double const angle) { desired_angle_ = angle; }
+  constexpr void desiredAngle(double const angle) { desired_angle_ = math::Angle {angle}; }
 
-  [[nodiscard]] double facingAngle() const { return math::convert_bearing_to_degrees(compass_->getValues()); }
+  [[nodiscard]] constexpr math::Angle desiredAngle() const { return desired_angle_; }
+
+  [[nodiscard]] math::Angle facingAngle() const { return math::Angle {compass_->getValues()}; }
+
+  [[nodiscard]] bool isFacingDesired() const {
+    return facingAngle() > desiredAngle() - 1 and facingAngle() < desiredAngle() + 1;
+  }
+
+  [[nodiscard]] double distanceToDesiredAngle() const { return facingAngle().signedDiff(desiredAngle()); }
 
 private:
   // *** Compass ***
   webots::Compass* compass_ {nullptr};
-  double desired_angle_ {-90.0};
+  math::Angle desired_angle_ {270.0};
 };
 
 class Odometry {
@@ -54,7 +66,10 @@ private:
 
 class Gps {
 public:
-  explicit Gps(Robot& robot) : gps_(robot.getGPS("gps")) { gps_->enable(utils::time_step); }
+  explicit Gps(Robot& robot) : gps_(robot.getGPS("gps")) {
+    logger(Log::robot) << "Gps initialized";
+    gps_->enable(utils::time_step);
+  }
 
   Gps() = default;
 

@@ -12,11 +12,9 @@
 
 using namespace webots;
 
-struct MyRobot final : public Robot {
+struct MyRobot final : private Robot {
 
-  MyRobot() : motors(*this), gps(*this), compass(*this), cameras(*this), ir_sensors(*this) { }
-
-  ~MyRobot() = default;
+  MyRobot() : motors(*this), gps(*this), compass(*this), cameras(*this), ir_sensors(*this) { motors.setVelocity(0); }
 
   bool time_step() { return step(utils::time_step) != -1; }
 
@@ -27,8 +25,6 @@ struct MyRobot final : public Robot {
   navigation::Odometry odometry;
   sensors::Cameras cameras;
   sensors::Infrared ir_sensors;
-
-  //  std::array<double, 4> lasers_;
 };
 
 

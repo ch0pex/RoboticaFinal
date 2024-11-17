@@ -1,6 +1,7 @@
 #pragma once
 
 #include "utils/common.hpp"
+#include "utils/logger.hpp"
 
 #include <cassert>
 #include <webots/Motor.hpp>
@@ -13,6 +14,7 @@ class Motors {
 public:
   explicit Motors(webots::Robot& robot) :
     left(robot.getMotor("left wheel motor")), right(robot.getMotor("right wheel motor")) {
+    logger(Log::robot) << "Motors initialized";
     left->setPosition(INFINITY);
     right->setPosition(INFINITY);
   }
@@ -36,17 +38,10 @@ public:
     right->setVelocity(speed);
   }
 
-  template<utils::Direction Dir>
-  void rotate(double const speed) const {
+  void rotate(double const speed = utils::max_velocity) const {
     assert(speed < utils::max_velocity);
-    if constexpr (Dir == utils::Direction::left) {
-      left->setVelocity(-speed);
-      right->setVelocity(speed);
-    }
-    else {
-      left->setVelocity(speed);
-      right->setVelocity(-speed);
-    }
+    left->setVelocity(speed);
+    right->setVelocity(-speed);
   }
 
 private:

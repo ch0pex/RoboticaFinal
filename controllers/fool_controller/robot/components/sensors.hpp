@@ -1,8 +1,4 @@
 /************************************************************************
- * Copyright (c) 2024 Alvaro Cabrera Barrio
- * This code is licensed under MIT license (see LICENSE.txt for details)
- ************************************************************************/
-/**
  * @file sensors.hpp
  * @version 1.0
  * @date 14/11/2024
@@ -13,6 +9,7 @@
 
 #pragma once
 
+#include "utils/logger.hpp"
 #include "utils/math.hpp"
 
 #include <webots/DistanceSensor.hpp>
@@ -25,8 +22,8 @@ namespace sensors {
 
 class Cameras {
 public:
-  explicit Cameras(webots::Robot& robot) :
-    front_cam_(robot.getCamera("camera_f")), sphere_cam_(robot.getCamera("camera_s")) {
+  explicit Cameras(Robot& robot) : front_cam_(robot.getCamera("camera_f")), sphere_cam_(robot.getCamera("camera_s")) {
+    logger(Log::robot) << "Cameras initialized";
     front_cam_->enable(utils::time_step);
     sphere_cam_->enable(utils::time_step);
   }
@@ -43,10 +40,10 @@ private:
 
 class Infrared {
 public:
-  explicit Infrared(webots::Robot& robot) {
+  explicit Infrared(Robot& robot) {
     for (size_t ind = 0; ind < distance_sensor_.size(); ++ind) {
       std::string sensor_name = std::string("ds") + std::to_string(ind);
-      std::cout << "Initializing distance sensor: " << sensor_name << "\n";
+      logger(Log::robot) << "Distance sensor " << sensor_name << " initialized";
       distance_sensor_.at(ind) = robot.getDistanceSensor(sensor_name);
       distance_sensor_.at(ind)->enable(utils::time_step);
     }
@@ -58,19 +55,9 @@ public:
     }
   }
 
-  template<uint8_t idx>
-  constexpr double distance() {
+  [[nodiscard]] double distance(uint8_t const idx) const {
     return math::ir_to_distance(distance_sensor_.at(idx)->getValue());
   }
-
-  template<uint8_t idx>
-  constexpr double distance2() {
-    return math::ir_to_distance(distance_sensor_[idx]->getValue());
-  }
-
-  double distance(uint8_t idx) { return math::ir_to_distance(distance_sensor_.at(idx)->getValue()); }
-
-  double distance2(uint8_t idx) { return math::ir_to_distance(distance_sensor_[idx]->getValue()); }
 
 private:
   std::array<DistanceSensor*, 16> distance_sensor_ {};

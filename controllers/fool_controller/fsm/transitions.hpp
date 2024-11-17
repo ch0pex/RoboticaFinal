@@ -8,41 +8,28 @@
 #include "states/person_search.hpp"
 #include "states/stop.hpp"
 
+#include <optional>
 #include <tuple>
 #include <variant>
-#include <optional>
 
-using state_variant = std::variant<Localization, MoveForward, ObstacleAvoidance, Orientation, PersonPickUp, PersonSearch, Stop>;
+using state_variant =
+    std::variant<Localization, MoveForward, ObstacleAvoidance, Orientation, PersonPickUp, PersonSearch, Stop>;
 
-inline std::optional<state_variant> transition(Localization& state, MyRobot& robot) {
-    return std::nullopt; 
+inline std::optional<state_variant> transition(Localization& state, MyRobot const& robot) {
+  if (robot.compass.isFacingDesired()) {
+    return MoveForward {};
+  }
+  return Orientation {};
 }
 
-inline std::optional<state_variant> transition(ObstacleAvoidance& state, MyRobot& robot) {
-    return std::nullopt; 
-}
+inline std::optional<state_variant> transition(ObstacleAvoidance& state, MyRobot& robot) { return std::nullopt; }
 
-inline std::optional<state_variant> transition(MoveForward& state, MyRobot& robot) {
+inline std::optional<state_variant> transition(MoveForward& state, MyRobot& robot) { return std::nullopt; }
 
-    return std::nullopt; 
-}
+inline std::optional<state_variant> transition(Orientation& state, MyRobot& robot) { return std::nullopt; }
 
-inline std::optional<state_variant> transition(Orientation& state, MyRobot & robot) {
+inline std::optional<state_variant> transition(PersonPickUp& state, MyRobot& robot) { return std::nullopt; }
 
-    return std::nullopt; 
-}
+inline std::optional<state_variant> transition(PersonSearch& state, MyRobot& robot) { return std::nullopt; }
 
-inline std::optional<state_variant> transition(PersonPickUp& state, MyRobot& robot) {
-
-    return std::nullopt; 
-}
-
-inline std::optional<state_variant> transition(PersonSearch& state, MyRobot& robot) {
-
-    return std::nullopt; 
-}
-
-inline std::optional<state_variant> transition(Stop& state, MyRobot& robot) {
-
-    return std::nullopt; 
-}
+inline std::optional<state_variant> transition(Stop& state, MyRobot& robot) { return std::nullopt; }

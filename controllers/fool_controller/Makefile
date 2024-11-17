@@ -39,7 +39,8 @@
 ###
 ### ---- C++ Sources ----
 ### if your program uses several C++ source files:
-CXX_SOURCES = fool_controller.cpp robot/MyRobot.cpp 
+CXX_SOURCES = fool_controller.cpp robot/MyRobot.cpp
+TEST_SOURCES = test/main.cpp
 ###
 ### ---- Compilation options ----
 ### if special compilation flags are necessary:
@@ -61,7 +62,7 @@ INCLUDE = -I"robot/"
 ### ---- Debug mode ----
 ### if you want to display the gcc command line for compilation and link, as
 ### well as the rm command details used for cleaning:
-### VERBOSE = 1
+VERBOSE = 1
 ###
 ###-----------------------------------------------------------------------------
 
