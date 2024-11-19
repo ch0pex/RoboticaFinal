@@ -27,7 +27,7 @@ public:
   void run() {
     logger(Log::controller) << "Init...";
     while (robot_->time_step()) {
-      std::cout << "---------------------------------------------\n";
+      logger(Log::separator);
       std::visit([&context = robot_](auto& state) { state.update(*context); }, current_state_);
       auto newState = std::visit(
           [&context = robot_](auto& state) -> std::optional<state_variant> { return transition(state, *context); },
@@ -38,6 +38,7 @@ public:
         current_state_ = std::move(newState.value());
         std::visit(
             [&context = robot_](auto& state) {
+              logger(Log::separator);
               logger(Log::controller) << "New State - " << state;
               state.enter(*context);
             },

@@ -2,11 +2,11 @@
 
 #include "utils/common.hpp"
 #include "utils/logger.hpp"
+#include "utils/math.hpp"
 
 #include <cassert>
 #include <webots/Motor.hpp>
 #include <webots/Robot.hpp>
-
 
 namespace actuators {
 
@@ -21,32 +21,31 @@ public:
 
   ~Motors() { setVelocity(0); }
 
-  template<utils::Direction motor>
-  void setVelocity(double const speed) const {
-    assert(speed < utils::max_velocity);
-    if constexpr (motor == utils::Direction::left) {
-      left->setVelocity(speed);
-    }
-    else {
-      right->setVelocity(speed);
-    }
+  void setVelocity(math::vec2<double> const vel) const {
+    left->setVelocity(clamp(vel.x));
+    right->setVelocity(clamp(vel.y));
   }
 
   void setVelocity(double const speed) const {
-    assert(speed < utils::max_velocity);
-    left->setVelocity(speed);
-    right->setVelocity(speed);
+    auto vel = clamp(speed);
+    left->setVelocity(vel);
+    right->setVelocity(vel);
   }
 
   void rotate(double const speed = utils::max_velocity) const {
-    assert(speed < utils::max_velocity);
-    left->setVelocity(speed);
-    right->setVelocity(-speed);
+    auto vel = clamp(speed);
+    left->setVelocity(vel);
+    right->setVelocity(-vel);
   }
 
+  math::vec2<double> velocity() { return {left->getVelocity(), right->getVelocity()}; }
+
 private:
-  // static constexpr auto clip_velocity = [](double const speed) { return speed > max_velocity ? max_velocity :
-  // speed;};
+  static constexpr auto clamp = [](double const speed) {
+    if (speed < -utils::max_velocity)
+      return -utils::max_velocity;
+    return speed > utils::max_velocity ? utils::max_velocity : speed;
+  };
 
   webots::Motor* left;
   webots::Motor* right;

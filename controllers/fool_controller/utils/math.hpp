@@ -100,7 +100,7 @@ public:
   [[nodiscard]] double rad() const { return (deg_ - 180) / (180.0 / pi_v); }
 
   void degrees(double const degrees) {
-    assert(angle > 0 and angle < 360);
+    //    assert(degrees > 0 and degrees < 360);
     deg_ = degrees;
   }
 
@@ -152,8 +152,6 @@ inline std::ostream& operator<<(std::ostream& os, Angle const& angle) {
   os << angle.degrees();
   return os;
 }
-
-constexpr double ir_to_distance(double const ir_value) { return (1024 - ir_value) * 0.2; }
 
 
 } // namespace math

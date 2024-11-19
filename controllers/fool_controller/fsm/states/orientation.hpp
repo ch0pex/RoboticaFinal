@@ -15,17 +15,23 @@ public:
       .kd  = 0.2,
       .ki  = 0.08,
     };
-
-    logger(Log::controller) << "Desired angle: " << robot.compass.desiredAngle();
     pid_ = Pid(params);
   };
 
   void update(MyRobot const& robot) {
-    double const out = pid_.calculate(0, robot.compass.distanceToDesiredAngle());
-    double const vel = -out * utils::delta_time * 2;
-    logger(Log::controller) << "Pid out: " << out;
-    logger(Log::controller) << "Velocity: " << vel;
-    robot.motors.rotate(vel);
+    double const dis = robot.compass.distanceToDesiredAngle();
+
+    if (dis > 178 or dis < -178) {
+      robot.motors.rotate(3);
+      return;
+    }
+
+    double const out = pid_.calculate(0, dis);
+    double const vel = -out * utils::delta_time * 5;
+    logger(Log::controller) << "Rotation velocity: " << vel;
+    logger(Log::controller) << "Facing angle: " << robot.compass.facingAngle();
+    logger(Log::controller) << "Distance to angle" << robot.compass.distanceToDesiredAngle();
+    robot.motors.setVelocity({vel + 4, -vel + 4});
   };
 
 private:

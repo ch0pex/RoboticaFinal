@@ -3,8 +3,9 @@
 #include "MyRobot.hpp"
 
 struct Stop {
-  void update(MyRobot& robot) { }
-  void enter(MyRobot& robot) { }
+  static constexpr auto enter = [](MyRobot& robot) { robot.motors.setVelocity(0); };
+
+  static constexpr auto update = [](MyRobot& robot) {};
 };
 
 inline std::ostream& operator<<(std::ostream& os, Stop const&) {

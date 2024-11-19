@@ -30,7 +30,7 @@ public:
   [[nodiscard]] math::Angle facingAngle() const { return math::Angle {compass_->getValues()}; }
 
   [[nodiscard]] bool isFacingDesired() const {
-    return facingAngle() > desiredAngle() - 1 and facingAngle() < desiredAngle() + 1;
+    return facingAngle() > desiredAngle() - 0.1 and facingAngle() < desiredAngle() + 0.1;
   }
 
   [[nodiscard]] double distanceToDesiredAngle() const { return facingAngle().signedDiff(desiredAngle()); }

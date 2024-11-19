@@ -46,7 +46,6 @@ public:
 
     // Calculate total output
     double output = p_out + i_out + d_out;
-    // logger(Log::controller) << "Dynamic model: " << output;
 
     // Restrict to max/min
     if (output > p_.max)
@@ -56,7 +55,6 @@ public:
 
     // Save error to previous error
     p_.pre_error = error;
-
     return output;
   }
 
