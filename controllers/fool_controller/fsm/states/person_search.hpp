@@ -3,8 +3,8 @@
 #include "MyRobot.hpp"
 
 struct PersonSearch {
-  void update(MyRobot& robot) { }
   void enter(MyRobot& robot) { }
+  void update(MyRobot& robot) { }
 };
 
 inline std::ostream& operator<<(std::ostream& os, PersonSearch const&) {

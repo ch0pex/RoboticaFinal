@@ -30,7 +30,7 @@ public:
     double const vel = -out * utils::delta_time * 5;
     logger(Log::controller) << "Rotation velocity: " << vel;
     logger(Log::controller) << "Facing angle: " << robot.compass.facingAngle();
-    logger(Log::controller) << "Distance to angle" << robot.compass.distanceToDesiredAngle();
+    logger(Log::controller) << "Distance to angle: " << robot.compass.distanceToDesiredAngle();
     robot.motors.setVelocity({vel + 4, -vel + 4});
   };
 

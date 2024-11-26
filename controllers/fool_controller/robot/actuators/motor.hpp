@@ -17,6 +17,7 @@ public:
     logger(Log::robot) << "Motors initialized";
     left->setPosition(INFINITY);
     right->setPosition(INFINITY);
+    setVelocity(0);
   }
 
   ~Motors() { setVelocity(0); }
@@ -42,8 +43,7 @@ public:
 
 private:
   static constexpr auto clamp = [](double const speed) {
-    if (speed < -utils::max_velocity)
-      return -utils::max_velocity;
+    if (speed < -utils::max_velocity) return -utils::max_velocity;
     return speed > utils::max_velocity ? utils::max_velocity : speed;
   };
 

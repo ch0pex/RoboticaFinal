@@ -34,8 +34,7 @@ public:
       last_level = Log::controller;
     }
     else if constexpr (lvl == Log::separator) {
-      if (last_level != Log::separator)
-        buffer_ << "----------------------------------------------";
+      if (last_level != Log::separator) buffer_ << "----------------------------------------------";
       last_level = Log::separator;
     }
     else {

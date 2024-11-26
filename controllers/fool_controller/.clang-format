@@ -57,6 +57,7 @@ SpacesInAngles: false
 SpacesInConditionalStatement: false
 SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
+AllowShortIfStatementsOnASingleLine: WithoutElse
 TabWidth: 2
 PointerAlignment: Left
 QualifierAlignment: Right

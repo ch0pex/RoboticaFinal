@@ -1,10 +1,14 @@
 #pragma once
 
 
-#include "components/actuators.hpp"
-#include "components/navigation.hpp"
-#include "components/sensors.hpp"
+#include "actuators/motor.hpp"
 
+#include "sensors/camera.hpp"
+#include "sensors/compass.hpp"
+#include "sensors/infrared.hpp"
+
+#include "navigation/gps.hpp"
+#include "navigation/odometry.hpp"
 
 #include <array>
 #include <webots/DistanceSensor.hpp>
@@ -14,23 +18,19 @@ using namespace webots;
 
 struct MyRobot final : private Robot {
 
-  MyRobot() : motors(*this), gps(*this), compass(*this), cameras(*this), ir_sensors(*this) { motors.setVelocity(0); }
+  MyRobot() : motors(*this), compass(*this), cameras(*this), ir_sensors(*this), gps(*this) { }
 
   bool time_step() { return step(utils::time_step) != -1; }
 
-  // Motors
+  // *** Actuators ***
   actuators::Motors motors;
-  navigation::Gps gps;
-  navigation::Compass compass;
-  navigation::Odometry odometry;
+
+  // *** Sensors ***
+  sensors::Compass compass;
   sensors::Cameras cameras;
   sensors::Infrared ir_sensors;
+
+  // *** Navigation ***
+  navigation::Gps gps;
+  navigation::Odometry odometry;
 };
-
-
-/*
-template <utils::Direction direction>
-inline void MyRobot::WallFollower()
-{
-}
-*/
