@@ -80,6 +80,10 @@ public:
     return min;
   }
 
+  [[nodiscard]] bool frontDetection() const {
+    return distance(front_left) < utils::min_distance or distance(front_right) < utils::min_distance;
+  };
+
   friend std::ostream& operator<<(std::ostream& os, Infrared& infrared);
 
 private:

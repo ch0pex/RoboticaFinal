@@ -21,7 +21,7 @@ inline std::optional<state_variant> transition([[maybe_unused]] Localization& st
 }
 
 inline std::optional<state_variant> transition([[maybe_unused]] Orientation& state, MyRobot& robot) {
-  if (robot.ir_sensors.wallDetected()) return ObstacleAvoidance {};
+  if (robot.ir_sensors.frontDetection()) return ObstacleAvoidance {};
   if (robot.compass.isFacingDesired()) return MoveForward {};
   return std::nullopt;
 }
@@ -33,6 +33,7 @@ inline std::optional<state_variant> transition([[maybe_unused]] MoveForward& sta
 
 inline std::optional<state_variant> transition([[maybe_unused]] ObstacleAvoidance& state, MyRobot& robot) {
   if (not robot.ir_sensors.wallDetected()) Orientation {};
+  if (robot.compass.isFacingDesired(10) and not robot.ir_sensors.frontDetection()) return Orientation {};
   return std::nullopt;
 }
 

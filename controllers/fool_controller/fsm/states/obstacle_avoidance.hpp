@@ -23,10 +23,6 @@ public:
     auto const& ir     = robot.ir_sensors;
     using sensor       = sensors::Infrared::Sensor;
 
-    auto front_detection = [&ir]() {
-      return ir.distance(sensor::front_left) < utils::min_distance or
-             ir.distance(sensor::front_right) < utils::min_distance;
-    };
 
     //    logger(Log::controller) << ir.distance(sensor::front_left) << ", " << ir.distance(sensor::front_right);
     //    logger(Log::controller) << ir.distance(sensor::left);
@@ -34,23 +30,30 @@ public:
     //        auto out = pid_.calculate(utils::min_distance, ir.minDistance());
     //
     if (ir.distance(sensor::left) < utils::min_distance) {
-      if (front_detection()) {
+      if (ir.frontDetection()) {
         left_speed += 2.0f;
         right_speed -= 2.0f;
       }
       else {
-        left_speed += 2.0f;
-        right_speed += 2.0f;
+        left_speed += 5.0f;
+        right_speed += 5.0f;
       }
     }
     else {
-      if (front_detection()) {
+      if (ir.frontDetection()) {
         left_speed += 2.0f;
         right_speed -= 2.0f;
       }
       else {
-        right_speed += 2.0f;
+        right_speed += 5.0f;
       }
+    }
+
+    if (robot.ir_sensors.distance(2) > utils::min_distance) {
+      right_speed += 1;
+    }
+    else if (robot.ir_sensors.distance(2) <= utils::min_distance) {
+      right_speed -= 1.5;
     }
 
     robot.motors.setVelocity({left_speed, right_speed});

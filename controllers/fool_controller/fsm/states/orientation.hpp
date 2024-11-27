@@ -21,8 +21,8 @@ public:
   void update(MyRobot const& robot) {
     double const dis = robot.compass.distanceToDesiredAngle();
 
-    if (dis > 178 or dis < -178) {
-      robot.motors.rotate(3);
+    if (dis > 160 or dis < -160) {
+      robot.motors.rotate(5);
       return;
     }
 

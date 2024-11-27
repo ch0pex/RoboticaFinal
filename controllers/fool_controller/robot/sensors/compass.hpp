@@ -44,8 +44,8 @@ public:
 
   [[nodiscard]] math::Angle facingAngle() const { return math::Angle {compass_->getValues()}; }
 
-  [[nodiscard]] bool isFacingDesired() const {
-    return facingAngle() > desiredAngle() - 0.1 and facingAngle() < desiredAngle() + 0.1;
+  [[nodiscard]] bool isFacingDesired(double error = 0.1) const {
+    return facingAngle() > desiredAngle() - error and facingAngle() < desiredAngle() + error;
   }
 
   [[nodiscard]] double distanceToDesiredAngle() const { return facingAngle().signedDiff(desiredAngle()); }

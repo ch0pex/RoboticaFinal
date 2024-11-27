@@ -30,6 +30,8 @@ public:
   explicit constexpr Pid(Params const& params) : p_ {params} { }
 
   constexpr double calculate(double const set_point, double const pv) {
+    if (p_.integral > p_.max) p_.integral = 0;
+
     // Calculate error
     double const error = set_point - pv;
 

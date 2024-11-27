@@ -39,7 +39,7 @@
 ###
 ### ---- C++ Sources ----
 ### if your program uses several C++ source files:
-CXX_SOURCES = fool_controller.cpp robot/MyRobot.cpp
+CXX_SOURCES = fool_controller.cpp
 TEST_SOURCES = test/main.cpp
 ###
 ### ---- Compilation options ----
