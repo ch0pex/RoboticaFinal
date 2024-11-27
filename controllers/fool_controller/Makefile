@@ -44,7 +44,7 @@ TEST_SOURCES = test/main.cpp
 ###
 ### ---- Compilation options ----
 ### if special compilation flags are necessary:
-CFLAGS = -std=c++17
+CFLAGS = -std=c++17 -O0 -g
 ###
 ### ---- Linked libraries ----
 ### if your program needs additional libraries:

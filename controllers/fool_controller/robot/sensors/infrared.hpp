@@ -36,11 +36,24 @@ public:
   }
 
   enum Sensor {
-    front_left  = 0,
-    left        = 3,
-    right       = 5,
-    front_right = 15,
+    ds0 = 0, // front left
+    ds1,
+    ds2,
+    ds3, // left
+    ds4,
+    ds5, // right
+    ds6,
+    ds7,
+    ds8,
+    ds9,
+    ds10,
+    ds11,
+    ds12,
+    ds13,
+    ds14,
+    ds15, // front right
 
+    none
   };
 
   ~Infrared() {
@@ -65,36 +78,47 @@ public:
 
   [[nodiscard]] bool wallDetected() const {
     for (std::size_t i = 0; i < distance_sensors_.size(); ++i) {
-      auto dis = distance(i);
-      if (dis < sensor_range) return true;
+      if (auto const dis = distance(i); dis < sensor_range) return true;
     }
     return false;
   }
 
-  double minDistance() const {
-    double min = std::numeric_limits<double>::max();
-    for (std::size_t i = 0; i < distance_sensors_.size(); ++i) {
-      auto const dis = distance(i);
-      min            = min > dis ? dis : min;
-    }
-    return min;
+  [[nodiscard]] bool detecting(uint8_t const idx, double const error = 0) const {
+    return distance(idx) < utils::min_distance - error;
   }
 
+  [[nodiscard]] Sensor minDistanceSensor() const {
+    double min      = std::numeric_limits<double>::max();
+    std::size_t idx = Sensor::none;
+    for (std::size_t i = 0; i < distance_sensors_.size(); ++i) {
+      if (auto const dis = distance(i); dis < min) {
+        min = dis;
+        idx = i;
+      }
+    }
+    return static_cast<Sensor>(idx);
+  }
+
+  static Sensor mirror(Sensor const sensor) { return static_cast<Sensor>(15 - sensor); }
+
   [[nodiscard]] bool frontDetection() const {
-    return distance(front_left) < utils::min_distance or distance(front_right) < utils::min_distance;
+    return detecting(ds0) or detecting(ds15) or detecting(ds1, 10) or detecting(ds14, 10) or detecting(ds2, 20) or
+           detecting(ds13, 20);
   };
 
-  friend std::ostream& operator<<(std::ostream& os, Infrared& infrared);
+  friend std::ostream& operator<<(std::ostream& os, Infrared const& infrared);
 
 private:
   static constexpr double sensor_range = 40.0;
   std::array<DistanceSensor*, 16> distance_sensors_ {};
 };
 
-inline std::ostream& operator<<(std::ostream& os, Infrared& infrared) {
-  for (size_t i = 0; i < infrared.distance_sensors_.size(); ++i) {
-    os << "Sensor(" << i << "): " << infrared.distance(i) << "\n";
+inline std::ostream& operator<<(std::ostream& os, Infrared const& infrared) {
+  os << "Sensor(" << 0 << "): " << infrared.distance(0) << "\n";
+  for (size_t i = 1; i < infrared.distance_sensors_.size(); ++i) {
+    os << "[Controller]: Sensor(" << i << "): " << infrared.distance(i) << "\n";
   }
+  return os;
 }
 
 } // namespace sensors

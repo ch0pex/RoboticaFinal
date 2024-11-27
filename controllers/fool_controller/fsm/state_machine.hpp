@@ -28,22 +28,23 @@ public:
     logger(Log::controller) << "Init...";
     while (robot_->time_step()) {
       logger(Log::separator);
-      std::visit([&context = robot_](auto& state) { state.update(*context); }, current_state_);
+      std::visit(
+          [&context = robot_](auto& state) {
+            logger(Log::separator);
+            logger(Log::controller) << "Current State - " << state;
+            logger(Log::separator);
+            state.update(*context);
+          },
+          current_state_
+      );
       auto newState = std::visit(
           [&context = robot_](auto& state) -> std::optional<state_variant> { return transition(state, *context); },
           current_state_
       );
-
+      // logger(Log::controller) << robot_->ir_sensors;
       if (newState) {
         current_state_ = std::move(newState.value());
-        std::visit(
-            [&context = robot_](auto& state) {
-              logger(Log::separator);
-              logger(Log::controller) << "New State - " << state;
-              state.enter(*context);
-            },
-            current_state_
-        );
+        std::visit([&context = robot_](auto& state) { state.enter(*context); }, current_state_);
       }
     }
   }

@@ -20,9 +20,9 @@ public:
   };
 
   struct Pixel {
-    std::int32_t red;
-    std::int32_t green;
-    std::int32_t blue;
+    std::uint8_t red;
+    std::uint8_t green;
+    std::uint8_t blue;
   };
 
   Camera(webots::Robot& robot, std::string_view name) :
@@ -34,23 +34,24 @@ public:
 
   [[nodiscard]] Resolution res() const { return resolution_; }
 
-  Pixel pixel(math::vec2<std::int32_t> const position) {
-    assert(position.x > 0 and position.x < resolution_.x);
-    assert(position.y > 0 and position.y < resolution_.y);
+  [[nodiscard]] Pixel pixel(math::vec2<std::int32_t> const position) const {
+    return {red(position), green(position), blue(position)};
+  }
+
+  [[nodiscard]] std::uint8_t red(math::vec2<std::int32_t> const pos) const {
+    return webots::Camera::imageGetRed(cam_->getImage(), resolution_.width, pos.x, pos.y);
+  };
+
+  [[nodiscard]] std::uint8_t green(math::vec2<std::int32_t> const pos) const {
+    return webots::Camera::imageGetGreen(cam_->getImage(), resolution_.width, pos.x, pos.y);
+  }
+
+  [[nodiscard]] std::uint8_t blue(math::vec2<std::int32_t> const pos) const {
+    return webots::Camera::imageGetBlue(cam_->getImage(), resolution_.width, pos.x, pos.y);
   }
 
 
 private:
-  using pixel_pos = math::vec2<std::int32_t>;
-
-  std::int32_t red(pixel_pos const pos) {return webots::Camera::
-
-  }
-
-  std::int32_t green(pixel_pos const pos) { }
-
-  std::int32_t blue(pixel_pos const pos) { }
-
   webots::Camera* cam_;
   Resolution resolution_;
 };
@@ -63,26 +64,54 @@ public:
 
 
   bool isPersonInFront() {
-    std::int32_t sum = 0;
-    std::float_t percentage_green, green, {0.0f};
-    std::uint8_t const* image_f = front_cam_->getImage();
+    std::int32_t sum              = 0;
+    std::uint32_t green           = 0;
+    std::float_t percentage_green = 0;
+
+    auto [width, height]     = front_cam_.res();
+    float const aspect_ratio = static_cast<float>(width) * static_cast<float>(height);
 
     // count number of pixels that are white
     // (here assumed to have pixel value > 245 out of 255 for all color components)
-    for (std::int32_t x = 0; x < image_width_f; x++) {
-      for (std::int32_t y = 0; y < image_height_f; y++) {
-        green = webots::Camera::imageGetGreen(image_f, image_width_f, x, y);
+    for (std::int32_t x = 0; x < width; x++) {
+      for (std::int32_t y = 0; y < height; y++) {
+        green = front_cam_.green({x, y});
         //        red   = webots::Camera::imageGetRed(image_f, image_width_f, x, y);
         //        blue  = webots::Camera::imageGetBlue(image_f, image_width_f, x, y);
 
-        if (green > 245) {
-          sum = sum + 1;
+        if (green > 10) {
+          ++sum;
         }
       }
     }
 
-    percentage_green = (sum / (float)(image_width_f * image_height_f));
+    percentage_green = (sum / aspect_ratio);
     return percentage_green > 0.99;
+  }
+
+  [[nodiscard]] std::int32_t wallInFront() const {
+    std::int32_t sum              = 0;
+    std::uint32_t blue            = 0;
+    std::float_t percentage_green = 0;
+
+    auto [width, height] = front_cam_.res();
+    logger(Log::robot) << "Res: " << width << " " << height << " ";
+
+    // count number of pixels that are white
+    // (here assumed to have pixel value > 245 out of 255 for all color components)
+    for (std::int32_t x = 0; x < width; x++) {
+      for (std::int32_t y = 0; y < height; y++) {
+        blue = front_cam_.green({x, y});
+        //        red   = webots::Camera::imageGetRed(image_f, image_width_f, x, y);
+        // blue  = webots::Camera::imageGetBlue(image_f, image_width_f, x, y);
+
+        if (blue > 245) {
+          ++sum;
+        }
+      }
+    }
+
+    return sum;
   }
 
 private:
