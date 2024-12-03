@@ -1,5 +1,6 @@
 #pragma once
 
+#include "states/dummy.hpp"
 #include "states/localization.hpp"
 #include "states/move_forward.hpp"
 #include "states/obstacle_avoidance.hpp"
@@ -13,7 +14,7 @@
 #include <variant>
 
 using state_variant =
-    std::variant<Localization, MoveForward, ObstacleAvoidance, Orientation, PersonPickUp, PersonSearch, Stop>;
+    std::variant<Localization, MoveForward, ObstacleAvoidance, Orientation, PersonPickUp, PersonSearch, Stop, Dummy>;
 
 inline std::optional<state_variant> transition([[maybe_unused]] Localization& state, MyRobot& robot) {
   if (robot.compass.isFacingDesired()) return MoveForward {};
@@ -32,12 +33,13 @@ inline std::optional<state_variant> transition([[maybe_unused]] MoveForward& sta
 }
 
 inline std::optional<state_variant> transition([[maybe_unused]] ObstacleAvoidance& state, MyRobot& robot) {
-  if (not robot.ir_sensors.frontDetection()) MoveForward {};
+  if (robot.ir_sensors.frontDetection() and robot.cameras.isPersonInFront()) return PersonPickUp {};
   if (robot.compass.isFacingDesired(10) and not robot.ir_sensors.frontDetection()) return Orientation {};
   return std::nullopt;
 }
 
 inline std::optional<state_variant> transition([[maybe_unused]] PersonPickUp& state, MyRobot& robot) {
+  if (robot.compass.isFacingDesired(10)) return ObstacleAvoidance {};
   return std::nullopt;
 }
 
@@ -46,3 +48,5 @@ inline std::optional<state_variant> transition([[maybe_unused]] PersonSearch& st
 }
 
 inline std::optional<state_variant> transition([[maybe_unused]] Stop& state, MyRobot& robot) { return std::nullopt; }
+
+inline std::optional<state_variant> transition([[maybe_unused]] Dummy& state, MyRobot& robot) { return std::nullopt; }

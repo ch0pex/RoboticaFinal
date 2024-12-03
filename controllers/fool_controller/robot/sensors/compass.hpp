@@ -40,6 +40,8 @@ public:
 
   constexpr void desiredAngle(double const angle) { desired_angle_ = math::Angle {angle}; }
 
+  constexpr void desiredAngle(math::Angle const angle) { desired_angle_ = angle; }
+
   [[nodiscard]] constexpr math::Angle desiredAngle() const { return desired_angle_; }
 
   [[nodiscard]] math::Angle facingAngle() const { return math::Angle {compass_->getValues()}; }

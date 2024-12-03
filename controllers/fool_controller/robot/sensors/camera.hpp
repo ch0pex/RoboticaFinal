@@ -71,21 +71,17 @@ public:
     auto [width, height]     = front_cam_.res();
     float const aspect_ratio = static_cast<float>(width) * static_cast<float>(height);
 
-    // count number of pixels that are white
-    // (here assumed to have pixel value > 245 out of 255 for all color components)
-    for (std::int32_t x = 0; x < width; x++) {
-      for (std::int32_t y = 0; y < height; y++) {
+    for (std::int32_t x = 0; x < width; ++x) {
+      for (std::int32_t y = 0; y < height; ++y) {
         green = front_cam_.green({x, y});
-        //        red   = webots::Camera::imageGetRed(image_f, image_width_f, x, y);
-        //        blue  = webots::Camera::imageGetBlue(image_f, image_width_f, x, y);
-
-        if (green > 10) {
+        if (green > 140) {
           ++sum;
         }
       }
     }
 
     percentage_green = (sum / aspect_ratio);
+    logger(Log::robot) << "Percentage: " << percentage_green;
     return percentage_green > 0.99;
   }
 
