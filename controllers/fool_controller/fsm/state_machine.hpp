@@ -37,6 +37,7 @@ public:
           },
           current_state_
       );
+
       auto newState = std::visit(
           [&context = robot_](auto& state) -> std::optional<state_variant> { return transition(state, *context); },
           current_state_

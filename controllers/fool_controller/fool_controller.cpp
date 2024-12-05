@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
 #else
   auto my_robot = std::make_unique<MyRobot>();
 
-  Controller<MyRobot, state_variant> controller {std::move(my_robot), Dummy()};
+  Controller<MyRobot, state_variant> controller {std::move(my_robot), Localization()};
   controller.run();
 #endif
 
@@ -41,7 +41,7 @@ static void test_main() {
   double val = 135;
   for (int i = 0; i < 1000; i++) {
     double const inc = pid.calculate(0, val);
-    std::printf("val:% 7.3f inc:% 7.3f\n", val, inc);
+    std::printf("val:% 7.3F inc:% 7.3F\n", val, inc);
     val += inc;
   }
 }

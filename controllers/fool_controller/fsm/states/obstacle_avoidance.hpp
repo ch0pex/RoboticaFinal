@@ -33,7 +33,7 @@ public:
   }
 
 private:
-  static inline auto follow_side = FollowDir::right;
+  static inline auto follow_side = FollowDir::left;
   // Pid pid_;
 };
 

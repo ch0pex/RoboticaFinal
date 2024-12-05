@@ -33,6 +33,8 @@ struct vec2 {
 
   constexpr bool operator==(vec2 const& other) const { return x == other.x && y == other.y; }
 
+  constexpr double distance(vec2 const& other) const { return sqrt(pow(x - other.x, 2) + pow(y - other.y, 2)); }
+
   T x, y;
 };
 
@@ -113,8 +115,7 @@ public:
 
   [[nodiscard]] double signedDiff(Angle const other) const {
     double const d = diff(other);
-    if (*this + d == other)
-      return d;
+    if (*this + d == other) return d;
     return -d;
   }
 

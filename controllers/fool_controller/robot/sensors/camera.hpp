@@ -8,6 +8,7 @@
 #include <webots/Robot.hpp>
 
 #include <array>
+#include <chrono>
 #include <execution>
 
 namespace sensors {
@@ -15,8 +16,12 @@ namespace sensors {
 class Camera {
 public:
   struct Resolution {
+    Resolution(std::int32_t const width, std::int32_t const height) :
+      width(width), height(height),
+      aspect_ratio {static_cast<std::float_t>(width) / static_cast<std::float_t>(height)} { }
     std::int32_t width;
     std::int32_t height;
+    std::float_t aspect_ratio;
   };
 
   struct Pixel {
@@ -25,7 +30,7 @@ public:
     std::uint8_t blue;
   };
 
-  Camera(webots::Robot& robot, std::string_view name) :
+  Camera(webots::Robot& robot, std::string_view const name) :
     cam_(robot.getCamera(std::string(name))), resolution_({cam_->getWidth(), cam_->getHeight()}) {
     cam_->enable(utils::time_step);
   }
@@ -34,22 +39,48 @@ public:
 
   [[nodiscard]] Resolution res() const { return resolution_; }
 
-  [[nodiscard]] Pixel pixel(math::vec2<std::int32_t> const position) const {
-    return {red(position), green(position), blue(position)};
+  [[nodiscard]] bool personInSight() const {
+    return checkPersonInRegion(0.1, {0, 0}, {resolution_.width, resolution_.height});
   }
 
-  [[nodiscard]] std::uint8_t red(math::vec2<std::int32_t> const pos) const {
-    return webots::Camera::imageGetRed(cam_->getImage(), resolution_.width, pos.x, pos.y);
-  };
+  [[nodiscard]] utils::Direction personInSide() const {
+    if (not personInSight()) return utils::Direction::front;
 
-  [[nodiscard]] std::uint8_t green(math::vec2<std::int32_t> const pos) const {
-    return webots::Camera::imageGetGreen(cam_->getImage(), resolution_.width, pos.x, pos.y);
+    if (checkPersonInRegion(0.2, {0, 0}, {resolution_.width / 2, resolution_.height})) {
+      return utils::Direction::left;
+    }
+    return utils::Direction::right;
   }
 
-  [[nodiscard]] std::uint8_t blue(math::vec2<std::int32_t> const pos) const {
-    return webots::Camera::imageGetBlue(cam_->getImage(), resolution_.width, pos.x, pos.y);
+  [[nodiscard]] bool personInFront() const {
+    return checkPersonInRegion(0.5, {0, 0}, {resolution_.width, resolution_.height});
   }
 
+  [[nodiscard]] bool
+  checkPersonInRegion(double const percentage_needed, math::vec2<int> start, math::vec2<int> end) const {
+    unsigned char const* image_f = cam_->getImage();
+    Pixel pixel {};
+    int sum                 = 0;
+    double percentage_green = 0.0;
+
+    for (int x = 0; x < resolution_.width; x++) {
+      for (int y = 0; y < resolution_.height; y++) {
+        pixel.green = webots::Camera::imageGetGreen(image_f, resolution_.width, x, y);
+        pixel.red   = webots::Camera::imageGetRed(image_f, resolution_.width, x, y);
+        pixel.blue  = webots::Camera::imageGetBlue(image_f, resolution_.width, x, y);
+
+        if (pixel.red < 30 and pixel.green > 100 and pixel.blue < 30) {
+          ++sum;
+        }
+      }
+    }
+
+    percentage_green = sum / static_cast<std::float_t>(resolution_.width * resolution_.height);
+
+    logger(Log::robot) << "Green percentage: " << percentage_green;
+
+    return percentage_green > percentage_needed;
+  }
 
 private:
   webots::Camera* cam_;
@@ -62,53 +93,11 @@ public:
     logger(Log::robot) << "Cameras initialized";
   }
 
+  [[nodiscard]] bool personInFront() const { return front_cam_.personInFront(); }
 
-  bool isPersonInFront() {
-    std::int32_t sum              = 0;
-    std::uint32_t green           = 0;
-    std::float_t percentage_green = 0;
+  [[nodiscard]] bool personInSight() const { return front_cam_.personInSight(); }
 
-    auto [width, height]     = front_cam_.res();
-    float const aspect_ratio = static_cast<float>(width) * static_cast<float>(height);
-
-    for (std::int32_t x = 0; x < width; ++x) {
-      for (std::int32_t y = 0; y < height; ++y) {
-        green = front_cam_.green({x, y});
-        if (green > 140) {
-          ++sum;
-        }
-      }
-    }
-
-    percentage_green = (sum / aspect_ratio);
-    logger(Log::robot) << "Percentage: " << percentage_green;
-    return percentage_green > 0.99;
-  }
-
-  [[nodiscard]] std::int32_t wallInFront() const {
-    std::int32_t sum              = 0;
-    std::uint32_t blue            = 0;
-    std::float_t percentage_green = 0;
-
-    auto [width, height] = front_cam_.res();
-    logger(Log::robot) << "Res: " << width << " " << height << " ";
-
-    // count number of pixels that are white
-    // (here assumed to have pixel value > 245 out of 255 for all color components)
-    for (std::int32_t x = 0; x < width; x++) {
-      for (std::int32_t y = 0; y < height; y++) {
-        blue = front_cam_.green({x, y});
-        //        red   = webots::Camera::imageGetRed(image_f, image_width_f, x, y);
-        // blue  = webots::Camera::imageGetBlue(image_f, image_width_f, x, y);
-
-        if (blue > 245) {
-          ++sum;
-        }
-      }
-    }
-
-    return sum;
-  }
+  [[nodiscard]] utils::Direction personInSide() const { return front_cam_.personInSide(); }
 
 private:
   Camera front_cam_;

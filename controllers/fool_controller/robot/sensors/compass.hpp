@@ -46,8 +46,10 @@ public:
 
   [[nodiscard]] math::Angle facingAngle() const { return math::Angle {compass_->getValues()}; }
 
-  [[nodiscard]] bool isFacingDesired(double error = 0.1) const {
-    return facingAngle() > desiredAngle() - error and facingAngle() < desiredAngle() + error;
+  [[nodiscard]] double facingRadians() const { return atan2(compass_->getValues()[0], compass_->getValues()[2]); }
+
+  [[nodiscard]] bool isFacingDesired(double const error = 0.1) const {
+    return facingAngle().diff(desiredAngle()) < error;
   }
 
   [[nodiscard]] double distanceToDesiredAngle() const { return facingAngle().signedDiff(desiredAngle()); }

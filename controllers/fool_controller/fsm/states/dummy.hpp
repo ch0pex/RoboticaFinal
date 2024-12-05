@@ -6,7 +6,7 @@ struct Dummy {
   constexpr static auto enter = [](MyRobot& robot) {};
 
   constexpr static auto update = [](MyRobot& robot) {
-    logger(Log::controller) << "Is infront: " << robot.cameras.isPersonInFront();
+    logger(Log::controller) << "Is infront: " << robot.cameras.personInFront();
   };
 };
 
