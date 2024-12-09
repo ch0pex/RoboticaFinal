@@ -5,8 +5,8 @@
 struct Dummy {
   constexpr static auto enter = [](MyRobot& robot) {};
 
-  constexpr static auto update = [](MyRobot& robot) {
-    logger(Log::controller) << "Is infront: " << robot.cameras.personInFront();
+  constexpr static auto update = [](MyRobot const& robot) {
+    logger(Log::controller) << "Dummy: " << robot.gps.position();
   };
 };
 

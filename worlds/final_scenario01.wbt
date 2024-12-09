@@ -9,8 +9,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation -0.20870618402474406 -0.9028633278134003 -0.37587170688885607 1.9535527623618851
-  position -11.747807461711469 12.83141700622921 -10.22132852357489
+  orientation 0.03560031566123035 -0.8316481608334299 -0.5541605851260034 3.086172841078277
+  position -2.0832313534322813 10.306861596173373 -1.668065666931707
   follow "Pioneer 2"
 }
 Background {
@@ -1038,8 +1038,8 @@ DEF FLOOR Solid {
   locked TRUE
 }
 Pioneer2 {
-  translation 0 0 -9.05
-  rotation 0 1 0 -0.785395307179586
+  translation -2.29003 0 0.15
+  rotation 0 1 0 3.14159
   controller "fool_controller"
   extensionSlot [
     Compass {

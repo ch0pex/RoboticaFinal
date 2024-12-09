@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
 #else
   auto my_robot = std::make_unique<MyRobot>();
 
-  Controller<MyRobot, state_variant> controller {std::move(my_robot), Localization()};
+  Controller<MyRobot, state_variant> controller {std::move(my_robot), Orientation()};
   controller.run();
 #endif
 

@@ -57,7 +57,7 @@ public:
 private:
   // *** Compass ***
   webots::Compass* compass_ {nullptr};
-  math::Angle desired_angle_ {270.0};
+  math::Angle desired_angle_ {90.0};
 };
 
 } // namespace sensors

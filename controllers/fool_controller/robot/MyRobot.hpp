@@ -32,12 +32,13 @@ struct MyRobot final : private Robot {
     return std::any_of(people_positions.begin(), people_positions.end(), [this](auto const& pos) {
       auto const distance = pos.distance(odometry.getPos());
       logger(Log::robot) << "Distance to person" << distance;
-      return distance < 5.0;
+      return distance < 1.0;
     });
   }
 
   // *** Found people positions ***/
   std::vector<math::vec2<double>> people_positions;
+  bool super_person_search = false;
 
   // *** Actuators ***
   actuators::Motors motors;

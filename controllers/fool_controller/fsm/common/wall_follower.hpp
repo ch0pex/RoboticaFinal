@@ -19,12 +19,21 @@
 enum class FollowDir : std::uint8_t { left = 0, right };
 
 inline FollowDir setSideToFollow(MyRobot const& robot, FollowDir const current_dir) {
+  using ir                  = sensors::Infrared::Sensor;
   auto const nearest_sensor = robot.ir_sensors.minDistanceSensor();
-  auto const mirror         = sensors::Infrared::mirror(nearest_sensor);
 
-  if (not robot.ir_sensors.detecting(mirror)) {
+  if (robot.ir_sensors.detecting(ir::ds3)) {
+    return FollowDir::left;
+  }
+
+  if (robot.ir_sensors.detecting(ir::ds12)) {
+    return FollowDir::right;
+  }
+
+  if (auto const mirror = sensors::Infrared::mirror(nearest_sensor); not robot.ir_sensors.detecting(mirror)) {
     return mirror < 8 ? FollowDir::right : FollowDir::left;
   }
+
 
   return current_dir == FollowDir::right ? FollowDir::left : FollowDir::right;
 }

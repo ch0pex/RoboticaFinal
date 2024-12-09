@@ -4,7 +4,7 @@
 
 struct MoveForward {
   static constexpr auto update = [](MyRobot& robot) {
-    // logger(Log::controller) << "Front wall percentage: " << robot.cameras.wallInFront();
+
   };
   static constexpr auto enter = [](MyRobot& robot) { robot.motors.setVelocity(5); };
 };
