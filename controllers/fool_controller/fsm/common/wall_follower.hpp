@@ -15,10 +15,15 @@
 
 #include "MyRobot.hpp"
 
+#include <bits/random.h>
+
+static inline std::random_device rd;
+static inline std::mt19937 gen(rd());
 
 enum class FollowDir : std::uint8_t { left = 0, right };
 
-inline FollowDir setSideToFollow(MyRobot const& robot, FollowDir const current_dir) {
+template<bool random = false>
+FollowDir setSideToFollow(MyRobot const& robot, FollowDir const current_dir) {
   using ir                  = sensors::Infrared::Sensor;
   auto const nearest_sensor = robot.ir_sensors.minDistanceSensor();
 
@@ -34,8 +39,15 @@ inline FollowDir setSideToFollow(MyRobot const& robot, FollowDir const current_d
     return mirror < 8 ? FollowDir::right : FollowDir::left;
   }
 
-
-  return current_dir == FollowDir::right ? FollowDir::left : FollowDir::right;
+  if constexpr (random) {
+    return static_cast<FollowDir>(std::uniform_int_distribution<std::uint8_t>(0, 1)(gen));
+  }
+  else {
+    if (robot.compass.desiredAngle() == math::Angle {0}) {
+      return FollowDir::left;
+    }
+    return current_dir == FollowDir::right ? FollowDir::left : FollowDir::right;
+  }
 }
 
 inline void wallFollowerLeft(MyRobot const& robot) {

@@ -32,7 +32,7 @@ inline std::optional<state_variant> transition([[maybe_unused]] Orientation& sta
 
   if (robot.ir_sensors.frontDetection()) {
     if (robot.super_person_search) {
-      return PersonSearch {}; // TODO this is a fix if we have time implement hfsm
+      return PersonSearch {};
     }
     return ObstacleAvoidance {};
   }
@@ -57,7 +57,7 @@ inline std::optional<state_variant> transition([[maybe_unused]] MoveForward& sta
       return PersonPickUp {};
     }
     if (robot.super_person_search) {
-      return PersonSearch {}; // TODO this is a fix if we have time implement hfsm
+      return PersonSearch {};
     }
     return ObstacleAvoidance {};
   }
@@ -112,20 +112,6 @@ inline std::optional<state_variant> transition([[maybe_unused]] PersonSearch& st
     if (robot.cameras.personInFront() and not robot.personAlreadySaved()) return PersonPickUp {};
   }
   else {
-    auto const person_dir = robot.cameras.personInSide();
-
-    // if (person_dir == utils::Direction::left) {
-    //   logger(Log::controller) << "Person to the left";
-    //   robot.compass.desiredAngle(robot.compass.desiredAngle() - 5);
-    //   return Orientation {};
-    // }
-    //
-    // if (person_dir == utils::Direction::right) {
-    //   logger(Log::controller) << "Person to the right";
-    //   robot.compass.desiredAngle(robot.compass.desiredAngle() + 5);
-    //   return Orientation {};
-    // }
-
     if (robot.compass.isFacingDesired(20)) return Orientation {};
   }
 

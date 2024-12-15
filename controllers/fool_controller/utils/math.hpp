@@ -1,5 +1,4 @@
-#ifndef MATH_HPP_
-#define MATH_HPP_
+#pragma once
 
 #include <cmath>
 #include <iostream>
@@ -154,7 +153,13 @@ inline std::ostream& operator<<(std::ostream& os, Angle const& angle) {
   return os;
 }
 
+namespace literals {
+
+constexpr std::uint64_t operator""_s(std::uint64_t const time) { return time * 1000; }
+
+constexpr std::uint64_t operator""_min(std::uint64_t const time) { return time * 60_s; }
+
+} // namespace literals
 
 } // namespace math
 
-#endif
