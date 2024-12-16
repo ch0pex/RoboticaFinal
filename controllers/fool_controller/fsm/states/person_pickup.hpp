@@ -5,7 +5,7 @@
 class PersonPickUp {
 public:
   void enter(MyRobot& robot) {
-    Pid::Params constexpr params {
+    Pid::Params params {
       .max = 180,
       .min = -180,
       .kp  = 0.9,

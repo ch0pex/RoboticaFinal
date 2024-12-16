@@ -9,7 +9,6 @@
 
 #include <array>
 #include <chrono>
-#include <execution>
 
 namespace sensors {
 

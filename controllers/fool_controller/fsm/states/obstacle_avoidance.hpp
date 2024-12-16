@@ -8,7 +8,6 @@
 class ObstacleAvoidance {
 public:
   static void enter(MyRobot& robot) {
-    using namespace math::literals;
     robot.motors.setVelocity(0);
     if (robot.people_positions.size() == 2 or robot.time_searching > utils::max_time_searching) {
       robot.compass.desiredAngle(270);

@@ -20,7 +20,6 @@ struct MyRobot final : private Robot {
   MyRobot() : motors(*this), compass(*this), cameras(*this), ir_sensors(*this), gps(*this) { }
 
   bool time_step() {
-    using namespace math::literals;
     auto const val = (step(utils::time_step) != -1);
     odometry.compute(compass.facingRadians(), motors.positionSensors());
     if (super_person_search) {

@@ -20,7 +20,6 @@
 #include <webots/Robot.hpp>
 
 #include <array>
-#include <execution>
 
 namespace sensors {
 

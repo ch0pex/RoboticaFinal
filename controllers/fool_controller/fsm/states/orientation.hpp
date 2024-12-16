@@ -8,7 +8,7 @@ public:
   Orientation() = default;
 
   void enter(MyRobot const& robot) {
-    Pid::Params constexpr params {
+    Pid::Params params {
       .max = 180,
       .min = -180,
       .kp  = 0.9,

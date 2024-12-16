@@ -19,10 +19,10 @@
 #include "utils/logger.hpp"
 #include "utils/math.hpp"
 
-#include <webots/camera.hpp>
-#include <webots/compass.hpp>
-#include <webots/gps.hpp>
-#include <webots/robot.hpp>
+#include <webots/Camera.hpp>
+#include <webots/Compass.hpp>
+#include <webots/GPS.hpp>
+#include <webots/Robot.hpp>
 
 using namespace webots;
 
