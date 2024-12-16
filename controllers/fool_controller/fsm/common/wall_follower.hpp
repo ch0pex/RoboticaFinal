@@ -46,7 +46,7 @@ FollowDir setSideToFollow(MyRobot const& robot, FollowDir const current_dir) {
     if (robot.compass.desiredAngle() == math::Angle {0}) {
       return FollowDir::left;
     }
-    return current_dir == FollowDir::right ? FollowDir::left : FollowDir::right;
+    return FollowDir::right;
   }
 }
 
